@@ -39,7 +39,7 @@ Eigen::MatrixXd LinearLayer::getAdjointWeights(const Eigen::VectorXd& input, con
 
    
    
-Eigen::MatrixXd LinearLayer::getAdjointInput(const Eigen::VectorXd& input, const Eigen::VectorXd& adjointPrev){
+Eigen::VectorXd LinearLayer::getAdjointInput(const Eigen::VectorXd& input, const Eigen::VectorXd& adjointPrev){
     for (int i=0;i< this->dimensionInput;i++){
         this->adjointInput(i) += weights.col(i).dot(adjointPrev);
     }

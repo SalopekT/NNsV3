@@ -15,7 +15,7 @@ class Layer{
         Layer(int dimensionInput, int dimensionOutput, Eigen::MatrixXd weights) : dimensionInput(dimensionInput), dimensionOutput(dimensionOutput), weights(weights) {}
         virtual Eigen::VectorXd simpleCalculateOutput(const Eigen::VectorXd& input) = 0;
         virtual Eigen::MatrixXd getAdjointWeights(const Eigen::VectorXd& input, const Eigen::VectorXd& adjointPrev) = 0;
-        virtual Eigen::MatrixXd getAdjointInput(const Eigen::VectorXd& input, const Eigen::VectorXd& adjointPrev) = 0;
+        virtual Eigen::VectorXd getAdjointInput(const Eigen::VectorXd& input, const Eigen::VectorXd& adjointPrev) = 0;
 
         virtual ~Layer() {};
         Eigen::VectorXd getInput();

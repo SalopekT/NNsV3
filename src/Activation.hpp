@@ -11,7 +11,9 @@ class Activation{
 
 
     public:
-        Activation(int dimension) : dimension(dimension) {};
+        Activation(int dimension) : dimension(dimension) {
+            this->adjoint = Eigen::VectorXd::Zero(dimension);
+        };
         virtual Eigen::VectorXd calculate(const Eigen::VectorXd& input) = 0;
         virtual Eigen::VectorXd getAdjoint(const Eigen::VectorXd& input, const Eigen::VectorXd& prevAdjoint) = 0;
         virtual ~Activation() {};
