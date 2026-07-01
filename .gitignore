@@ -1,0 +1,21 @@
+# Build directories
+build/
+Debug/
+Release/
+*.exe
+*.obj
+*.pdb
+
+# Visual Studio files
+*.vcxproj*
+*.sln
+*.user
+*.ipch
+
+# Temporary files
+*.log
+*.tmp
+*.bak
+
+# Eigen or other libraries you don't want in Git
+/eigen-3.4.0
