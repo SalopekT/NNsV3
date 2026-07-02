@@ -11,6 +11,10 @@ add_executable(eigen_example
     src/main.cpp
     src/Layer.cpp
     src/LinearLayer.cpp
+    src/Network.cpp
+    src/Relu.cpp
+    src/Softmax.cpp
+    src/CrossEntropyLoss.cpp
 )
 
 target_link_libraries(eigen_example

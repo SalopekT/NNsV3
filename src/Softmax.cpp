@@ -32,4 +32,5 @@ Eigen::VectorXd Softmax::getAdjoint(const Eigen::VectorXd& input, const Eigen::V
             }
         }
     }
+    return this->adjoint;
 }

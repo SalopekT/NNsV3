@@ -10,4 +10,5 @@ Eigen::VectorXd Relu::getAdjoint(const Eigen::VectorXd& input, const Eigen::Vect
             this->adjoint(i) += prevAdjoint(i);
         }
     }
+    return this->adjoint;
 }
