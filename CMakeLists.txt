@@ -12,9 +12,10 @@ add_executable(eigen_example
     src/Layer.cpp
     src/LinearLayer.cpp
     src/Network.cpp
-    src/Relu.cpp
-    src/Softmax.cpp
-    src/CrossEntropyLoss.cpp
+    src/Activations/Relu.cpp
+    src/Activations/Softmax.cpp
+    src/Losses/CrossEntropyLoss.cpp
+    src/MNISTdata/FileReader.cpp
 )
 
 target_link_libraries(eigen_example

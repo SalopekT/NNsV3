@@ -18,3 +18,33 @@ Eigen::VectorXd Network::forwardPass(const Eigen::VectorXd& input){
     }
     return helper;
 }
+
+double Network::backwardPass(const Eigen::VectorXd& predicted, const Eigen::VectorXd& target){
+    double loss = this->loss->calculate(predicted, target);
+    Eigen::VectorXd adjointPrev = this->loss->calculateAdjoint(target);
+    for (int i=this->layers.size()-1;i>=0;i--){
+        Eigen::VectorXd adjointAct = this->activations.at(i)->calculateAdjoint(adjointPrev);
+        Eigen::MatrixXd adjointLinearWeights = this->layers.at(i)->calculateAdjointWeights(adjointAct);
+        Eigen::VectorXd adjointLinearInput = this->layers.at(i)->calculateAdjointInput(adjointAct);
+        adjointPrev = adjointLinearInput;
+    }
+    return loss;
+}
+
+
+void Network::printWeightsAdjoints(){
+    for (int i=this->layers.size()-1;i>=0;i--){
+        std::cout << "Layer: " << i << std::endl;
+        std::cout << this->layers.at(i)->getAdjointWeights() << std::endl;
+    }
+}
+
+void Network::updateWeights(){
+    this->loss->resetAdjoint();
+    for (int i=this->layers.size()-1;i>=0;i--){
+        this->layers.at(i)->updateWeights();
+        this->layers.at(i)->resetAdjointWeights();
+        this->layers.at(i)->resetAdjointInput();
+        this->activations.at(i)->resetAdjoint();
+    }
+}

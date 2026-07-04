@@ -9,8 +9,8 @@ class LinearLayer : public Layer{
         : Layer(dimensionInput,dimensionOutput,weights){}
 
         Eigen::VectorXd simpleCalculateOutput(const Eigen::VectorXd& input) override;
-        Eigen::MatrixXd getAdjointWeights(const Eigen::VectorXd& input, const Eigen::VectorXd& adjointPrev) override;
-        Eigen::VectorXd getAdjointInput(const Eigen::VectorXd& input, const Eigen::VectorXd& adjointPrev) override;
+        Eigen::MatrixXd calculateAdjointWeights(const Eigen::VectorXd& adjointPrev) override;
+        Eigen::VectorXd calculateAdjointInput(const Eigen::VectorXd& adjointPrev) override;
 
         ~LinearLayer();
 };

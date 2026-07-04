@@ -26,3 +26,22 @@ double Layer::getWeight(int row, int col){
 void Layer::setWeight(int row, int col, double value){
     this->weights(row,col) = value;
 }
+
+Eigen::MatrixXd Layer::getAdjointWeights(){
+    return this->adjointWeights;
+}
+
+Eigen::VectorXd Layer::getAdjointInput(){
+    return this->adjointInput;
+}
+
+void Layer::resetAdjointWeights(){
+    this->adjointWeights = Eigen::MatrixXd::Zero(dimensionOutput, dimensionInput+1);
+}
+void Layer::resetAdjointInput(){
+    adjointInput = Eigen::VectorXd::Zero(dimensionInput);
+}
+
+void Layer::updateWeights(){
+    this->weights += this->adjointWeights;
+}

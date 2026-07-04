@@ -6,8 +6,8 @@
 #include <memory>
 #include <Eigen/Dense>
 #include "Layer.hpp"
-#include "Activation.hpp"
-#include "Loss.hpp"
+#include "Activations/Activation.hpp"
+#include "Losses/Loss.hpp"
 
 class Network{
     private:
@@ -18,6 +18,12 @@ class Network{
         void addLayerAndActivation(std::unique_ptr<Layer> layer, std::unique_ptr<Activation> activation);
         void setLoss(std::unique_ptr<Loss> loss);
         Eigen::VectorXd forwardPass(const Eigen::VectorXd& input);
+        double backwardPass(const Eigen::VectorXd& predicted, const Eigen::VectorXd& target);
+
+        void printWeightsAdjoints();
+        void updateWeights();
+
+        
 };
 
 #endif

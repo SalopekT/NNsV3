@@ -11,7 +11,7 @@ LinearLayer::LinearLayer(int dimensionInput, int dimensionOutput) : Layer(dimens
     });
 
     adjointWeights = Eigen::MatrixXd::Zero(dimensionOutput, dimensionInput+1);
-    adjointInput = Eigen::MatrixXd::Zero(dimensionOutput, dimensionInput);
+    adjointInput = Eigen::VectorXd::Zero(dimensionInput);
 }
 
 Eigen::VectorXd LinearLayer::simpleCalculateOutput(const Eigen::VectorXd& input_old){
@@ -29,9 +29,9 @@ Eigen::VectorXd LinearLayer::simpleCalculateOutput(const Eigen::VectorXd& input_
 
 
 
-Eigen::MatrixXd LinearLayer::getAdjointWeights(const Eigen::VectorXd& input, const Eigen::VectorXd& adjointPrev){
+Eigen::MatrixXd LinearLayer::calculateAdjointWeights(const Eigen::VectorXd& adjointPrev){
     for (int i = 0; i < this->dimensionOutput; i++) {
-        this->adjointWeights.row(i) += adjointPrev(i) * input.transpose();
+        this->adjointWeights.row(i) += adjointPrev(i) * this->input.transpose();
     }
     return this->adjointWeights;
 }
@@ -39,7 +39,7 @@ Eigen::MatrixXd LinearLayer::getAdjointWeights(const Eigen::VectorXd& input, con
 
    
    
-Eigen::VectorXd LinearLayer::getAdjointInput(const Eigen::VectorXd& input, const Eigen::VectorXd& adjointPrev){
+Eigen::VectorXd LinearLayer::calculateAdjointInput(const Eigen::VectorXd& adjointPrev){
     for (int i=0;i< this->dimensionInput;i++){
         this->adjointInput(i) += weights.col(i).dot(adjointPrev);
     }
