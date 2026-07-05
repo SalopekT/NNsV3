@@ -22,7 +22,7 @@ class Layer{
         void resetAdjointWeights();
         void resetAdjointInput();
 
-        void updateWeights();
+        void updateWeights(double learningRate);
 
         virtual ~Layer() {};
         Eigen::VectorXd getInput();

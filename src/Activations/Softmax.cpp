@@ -17,7 +17,7 @@ Eigen::VectorXd Softmax::calculate(const Eigen::VectorXd& input){
 
 Eigen::VectorXd Softmax::calculateAdjoint(const Eigen::VectorXd& prevAdjoint){
     //subtracting maxVal makes it stable (there are no large exponents)
-    double maxVal = this->input.maxCoeff();
+    /*double maxVal = this->input.maxCoeff();
     Eigen::VectorXd expVec = this->input.array()
         .unaryExpr([maxVal](double x){
             return std::exp(x - maxVal);
@@ -33,6 +33,7 @@ Eigen::VectorXd Softmax::calculateAdjoint(const Eigen::VectorXd& prevAdjoint){
                 this->adjoint(i)-=(expVec(i)*expVec(j)/sum_squared)*prevAdjoint(j);
             }
         }
-    }
+    }*/
+    this->adjoint=prevAdjoint;
     return this->adjoint;
 }

@@ -15,15 +15,20 @@ class Network{
         std::vector<std::unique_ptr<Activation>> activations;
         std::unique_ptr<Loss> loss;
     public:
+        Network();
+        //Network(const std::string& path);
+
         void addLayerAndActivation(std::unique_ptr<Layer> layer, std::unique_ptr<Activation> activation);
         void setLoss(std::unique_ptr<Loss> loss);
         Eigen::VectorXd forwardPass(const Eigen::VectorXd& input);
         double backwardPass(const Eigen::VectorXd& predicted, const Eigen::VectorXd& target);
 
         void printWeightsAdjoints();
-        void updateWeights();
+        void updateWeights(double learningRate);
+        void storeWeightsInFileSystem(const std::string& path);
 
-        
+        void stochasticGradientDescent(double learningRate, int numEpochs,
+                                        const std::vector<std::vector<uint8_t>>& trainImages, const std::vector<uint8_t>& trainLabels);
 };
 
 #endif

@@ -42,6 +42,6 @@ void Layer::resetAdjointInput(){
     adjointInput = Eigen::VectorXd::Zero(dimensionInput);
 }
 
-void Layer::updateWeights(){
-    this->weights += this->adjointWeights;
+void Layer::updateWeights(double learningRate){
+    this->weights -= learningRate*this->adjointWeights;
 }

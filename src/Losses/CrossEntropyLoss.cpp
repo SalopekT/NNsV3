@@ -12,7 +12,7 @@ double CrossEntropyLoss::calculate(const Eigen::VectorXd& predicted, const Eigen
 
 Eigen::VectorXd CrossEntropyLoss::calculateAdjoint(const Eigen::VectorXd& target){
     for (int i=0;i<dimensionInput;i++){
-        this->adjoint(i)-=target(i)/this->input(i);
+        this->adjoint(i) = this->input(i)-target(i);
     }
     return this->adjoint;
 }

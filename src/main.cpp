@@ -1,6 +1,7 @@
 #include <iostream>
 #include <Eigen/Dense>
 #include <memory>
+#include <random>
 #include "Layer.hpp"
 #include "LinearLayer.hpp"
 #include "Activations/Activation.hpp"
@@ -32,13 +33,13 @@ int main() {
     );
 
 
-    
-    std::unique_ptr<Layer> l1 = std::make_unique<LinearLayer>(784,64);
-    l1->printWeights();
-    std::unique_ptr<Activation> a1 = std::make_unique<Relu>(64);
 
-    std::unique_ptr<Layer> l2= std::make_unique<LinearLayer>(64,10);
-    l2->printWeights();
+    std::unique_ptr<Layer> l1 = std::make_unique<LinearLayer>(784,128);
+    //l1->printWeights();
+    std::unique_ptr<Activation> a1 = std::make_unique<Relu>(128);
+
+    std::unique_ptr<Layer> l2= std::make_unique<LinearLayer>(128,10);
+    //l2->printWeights();
     std::unique_ptr<Activation> a2 = std::make_unique<Softmax>(10);
 
     std::unique_ptr<Loss> loss = std::make_unique<CrossEntropyLoss>(10);
@@ -48,7 +49,10 @@ int main() {
     net->addLayerAndActivation(std::move(l2),std::move(a2));
     net->setLoss(std::move(loss));
     std::cout << imgs[0].size() << std::endl;
-    std::cout << static_cast<int>(lbls[0]) << '\n';
+    std::cout << static_cast<int>(lbls[2]) << '\n';
+
+    net->stochasticGradientDescent(0.000005,21,imgs,lbls);
+    net->storeWeightsInFileSystem("weights3.txt");
     delete net;
 
     return 0;
