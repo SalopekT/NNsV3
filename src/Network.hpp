@@ -16,7 +16,7 @@ class Network{
         std::unique_ptr<Loss> loss;
     public:
         Network();
-        //Network(const std::string& path);
+        Network(const std::string& path);
 
         void addLayerAndActivation(std::unique_ptr<Layer> layer, std::unique_ptr<Activation> activation);
         void setLoss(std::unique_ptr<Loss> loss);
@@ -28,6 +28,8 @@ class Network{
         void storeWeightsInFileSystem(const std::string& path);
 
         void stochasticGradientDescent(double learningRate, int numEpochs,
+                                        const std::vector<std::vector<uint8_t>>& trainImages, const std::vector<uint8_t>& trainLabels);
+         void miniBatchGradientDescent(double learningRate, int numEpochs, int batchSize,
                                         const std::vector<std::vector<uint8_t>>& trainImages, const std::vector<uint8_t>& trainLabels);
 };
 

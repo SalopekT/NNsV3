@@ -2,6 +2,9 @@
 #include "Layer.hpp"
 #include "Activations/Activation.hpp"
 #include "Losses/Loss.hpp"
+#include "LinearLayer.hpp"
+#include "Activations/Relu.hpp"
+#include "Activations/Softmax.hpp"
 #include <fstream>
 #include <random>
 
@@ -12,14 +15,13 @@ Network::Network(){
 
 
 //for testing
-/*Network::Network(const std::string& path){
+Network::Network(const std::string& path){
     std::ifstream file(path);
     if (!file.is_open()) {
         throw std::runtime_error("Could not open weights file: " + path);
     }
     std::string line;
     int layerIndex = 0;
-
     while (std::getline(file, line)) {
         if (line.size() > 0 && line[0] == '#') {
             std::istringstream header(line.substr(1)); // skip '#'
@@ -47,21 +49,25 @@ Network::Network(){
                 }
             }
             //!!!! this is hardcoded !!!!
-            std::shared_ptr<Layer> layer;
-            if (layerIndex==3){
-                layer = std::make_shared<LinearLayer>(numInputs-1,numOutputs,weights);
-            }
-            else{
-                layer = std::make_shared<ReluLayer>(numInputs-1,numOutputs,weights);
-            }
-            
-            layers.push_back(layer);
+            std::unique_ptr<Layer> layer = std::make_unique<LinearLayer>(numInputs-1,numOutputs,weights);
+            layers.push_back(std::move(layer));
             layerIndex++;
+        }
+    }
+    for (int i=0;i<layers.size();i++){
+        int outputSize = layers.at(i)->getDimensionOutput();
+        if (i!=layers.size()-1){
+            std::unique_ptr<Activation> activation = std::make_unique<Relu>(outputSize);
+            activations.push_back(std::move(activation));
+        }
+        else{
+            std::unique_ptr<Activation> activation = std::make_unique<Softmax>(outputSize);
+            activations.push_back(std::move(activation));
         }
     }
 
 
-}*/
+}
 
 
 void Network::addLayerAndActivation(std::unique_ptr<Layer> layer, std::unique_ptr<Activation> activation){
@@ -177,4 +183,12 @@ void Network::stochasticGradientDescent(double learningRate, int numEpochs,
 
         }
     }
+}
+
+void Network::miniBatchGradientDescent(double learningRate, int numEpochs, int batchSize,
+                                        const std::vector<std::vector<uint8_t>>& trainImages, const std::vector<uint8_t>& trainLabels){
+
+
+
+
 }
