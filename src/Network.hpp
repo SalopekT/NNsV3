@@ -25,6 +25,8 @@ class Network{
 
         void printWeightsAdjoints();
         void updateWeights(double learningRate);
+        void storeWeightsCumulative(); //this is useful for batch methods
+        void updateWeightsBatch(double learningRate, int batchSize); //this too
         void storeWeightsInFileSystem(const std::string& path);
 
         void stochasticGradientDescent(double learningRate, int numEpochs,

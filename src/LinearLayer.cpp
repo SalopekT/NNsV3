@@ -4,14 +4,19 @@
 
 LinearLayer::LinearLayer(int dimensionInput, int dimensionOutput) : Layer(dimensionInput,dimensionOutput){
     std::mt19937 generator(std::random_device{}());
-    std::normal_distribution<double> distribution(0, 1);
-    weights = Eigen::MatrixXd::Zero(dimensionOutput, dimensionInput+1);
-    weights = weights.array().unaryExpr([&generator,&distribution](double){
+
+    double stddev = std::sqrt(2.0 / dimensionInput);
+    std::normal_distribution<double> distribution(0.0, stddev);
+
+    weights = Eigen::MatrixXd::Zero(dimensionOutput, dimensionInput + 1);
+
+    weights = weights.unaryExpr([&](double) {
         return distribution(generator);
     });
 
     adjointWeights = Eigen::MatrixXd::Zero(dimensionOutput, dimensionInput+1);
     adjointInput = Eigen::VectorXd::Zero(dimensionInput);
+    cumulativeAdjointWeights = Eigen::MatrixXd::Zero(dimensionOutput, dimensionInput+1);
 }
 
 Eigen::VectorXd LinearLayer::simpleCalculateOutput(const Eigen::VectorXd& input_old){

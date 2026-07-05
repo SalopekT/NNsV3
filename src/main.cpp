@@ -56,13 +56,13 @@ int main() {
     std::cout << imgs[0].size() << std::endl;
     std::cout << static_cast<int>(lbls[2]) << '\n';
 
-    net->stochasticGradientDescent(0.0005,21,imgs,lbls);
-    net->storeWeightsInFileSystem("weights3.txt");
+    net->miniBatchGradientDescent(0.0005,25,32,imgs,lbls);
+    net->storeWeightsInFileSystem("weights5.txt");
     delete net;
 
 
     //testing
-    /*Network* network = new Network("C:\\Users\\tinsa\\Projects\\NNsV3\\build\\Debug\\weights3.txt");
+    /*Network* network = new Network("C:\\Users\\tinsa\\Projects\\NNsV3\\build\\Debug\\weights4.txt");
     FileReader reader("C:\\Users\\tinsa\\Projects\\NNs\\t10k-images-idx3-ubyte\\t10k-images.idx3-ubyte", "C:\\Users\\tinsa\\Projects\\NNs\\t10k-labels-idx1-ubyte\\t10k-labels.idx1-ubyte");
     reader.read_mnist();
 

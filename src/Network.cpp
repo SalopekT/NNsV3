@@ -185,10 +185,74 @@ void Network::stochasticGradientDescent(double learningRate, int numEpochs,
     }
 }
 
+void Network::storeWeightsCumulative(){
+    this->loss->resetAdjoint();
+    for (int i=this->layers.size()-1;i>=0;i--){
+        this->layers.at(i)->storeWeightsCumulative();
+        this->layers.at(i)->resetAdjointWeights();
+        this->layers.at(i)->resetAdjointInput();
+        this->activations.at(i)->resetAdjoint();
+    }
+}
+
+void Network::updateWeightsBatch(double learningRate, int batchSize){
+    this->loss->resetAdjoint();
+    for (int i=this->layers.size()-1;i>=0;i--){
+        this->layers.at(i)->updateWeightsBatch(learningRate, batchSize);
+        this->layers.at(i)->resetCumulativeAdjointWeights();
+        this->layers.at(i)->resetAdjointWeights();
+        this->layers.at(i)->resetAdjointInput();
+        this->activations.at(i)->resetAdjoint();
+    }
+}
+
 void Network::miniBatchGradientDescent(double learningRate, int numEpochs, int batchSize,
                                         const std::vector<std::vector<uint8_t>>& trainImages, const std::vector<uint8_t>& trainLabels){
 
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<int> dist(0, trainImages.size()-1);
+    int counter = 1;
+    double avg_loss = 0;
+    for (int i=0;i<numEpochs;i++){
+        for (int j=0;j<2000;j++){
+            std::vector<std::vector<uint8_t>> batch;
+            for (int k=0;k<batchSize;k++){
+                int index = dist(gen);
+                std::vector<uint8_t> sample = trainImages[index];
+                uint8_t label = trainLabels[index];
+                 //creating input data compatible with the neural network
+                Eigen::VectorXd input;
+                std::vector<double> inputHelper;
+                for (int row = 0; row < 28; row++) {
+                    for (int col = 0; col < 28; col++) {
+                        inputHelper.push_back(sample[row * 28 + col]/(127.5)-1);   //this is pixel/255*2 - 1 so it is normalized to [-1,1]
+                    }
 
+                }
+                input = Eigen::Map<Eigen::VectorXd>(inputHelper.data(), inputHelper.size());
+                Eigen::VectorXd realOutput = Eigen::VectorXd::Zero(10);
+                for (int i=0;i<10;i++){
+                    if ((int)label == i){
+                        realOutput(i)=1;
+                    }
+                }
+                Eigen::VectorXd prediction = this->forwardPass(input);
+                double sampleLoss = this->backwardPass(prediction,realOutput);
+                avg_loss+=sampleLoss;
+                this->storeWeightsCumulative();
+            }
+
+            this->updateWeightsBatch(learningRate,batchSize);
+            counter++;
+            if (counter==200){
+                std::cout << "Average loss: " << avg_loss/(200*batchSize) << std::endl;
+                counter = 1;
+                avg_loss=0;
+            }
+            
+        }
+    }
 
 
 }

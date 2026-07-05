@@ -41,7 +41,17 @@ void Layer::resetAdjointWeights(){
 void Layer::resetAdjointInput(){
     adjointInput = Eigen::VectorXd::Zero(dimensionInput);
 }
-
+void Layer::resetCumulativeAdjointWeights(){
+    this->cumulativeAdjointWeights = Eigen::MatrixXd::Zero(dimensionOutput, dimensionInput+1);
+}
 void Layer::updateWeights(double learningRate){
     this->weights -= learningRate*this->adjointWeights;
 }
+
+void Layer::storeWeightsCumulative(){
+    this->cumulativeAdjointWeights+=this->adjointWeights;
+}
+
+ void Layer::updateWeightsBatch(double learningrate, int batchSize){
+    this->weights -= (1/(double) batchSize)*learningrate*cumulativeAdjointWeights;
+ }

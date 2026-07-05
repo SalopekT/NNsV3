@@ -10,6 +10,9 @@ class Layer{
         Eigen::MatrixXd adjointInput; //jacobian of output w.r.t input
         int dimensionInput,dimensionOutput;
         Eigen::VectorXd input;
+
+        //this is for batch gradient descent
+        Eigen::MatrixXd cumulativeAdjointWeights;
     public:
         Layer(int dimensionInput, int dimensionOutput) : dimensionInput(dimensionInput), dimensionOutput(dimensionOutput){}
         Layer(int dimensionInput, int dimensionOutput, Eigen::MatrixXd weights) : dimensionInput(dimensionInput), dimensionOutput(dimensionOutput), weights(weights) {}
@@ -21,8 +24,11 @@ class Layer{
         Eigen::VectorXd getAdjointInput();
         void resetAdjointWeights();
         void resetAdjointInput();
+        void resetCumulativeAdjointWeights();
 
         void updateWeights(double learningRate);
+        void storeWeightsCumulative();
+        void updateWeightsBatch(double learningrate, int batchSize);
 
         virtual ~Layer() {};
         Eigen::VectorXd getInput();
