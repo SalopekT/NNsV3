@@ -27,7 +27,7 @@ void Canvas::mousePressEvent(QMouseEvent *event){
     painter.setBrush(Qt::black);
 
 
-    int radius = 30;
+    int radius = 8;
     painter.drawEllipse(event->pos(), radius, radius);
 
     update();
@@ -56,7 +56,7 @@ void Canvas::mouseMoveEvent(QMouseEvent *event){
     painter.setPen(Qt::NoPen);
     painter.setBrush(Qt::black);
 
-    int radius = 30;
+    int radius = 8;
     painter.drawEllipse(event->pos(), radius, radius);
 
     update();

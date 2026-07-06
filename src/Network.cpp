@@ -247,6 +247,7 @@ void Network::miniBatchGradientDescent(double learningRate, int numEpochs, int b
             counter++;
             if (counter==200){
                 std::cout << "Average loss: " << avg_loss/(200*batchSize) << std::endl;
+                if (avg_loss/(200*batchSize) < 0.1) return;
                 counter = 1;
                 avg_loss=0;
             }

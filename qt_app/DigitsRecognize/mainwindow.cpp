@@ -12,7 +12,7 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
-    network = new Network("\\weights5.txt");
+    network = new Network("C:\\Users\\tinsa\\Projects\\NNsV3\\build\\Debug\\weights5.txt");
     QWidget *central = new QWidget(this);
     setCentralWidget(central);
 
@@ -41,7 +41,7 @@ void MainWindow::processDrawing()
     }
 
 
-    Eigen::VectorXd output = network->simpleForwardPass(vec);
+    Eigen::VectorXd output = network->forwardPass(vec);
 
     int predicted = 0;
     double maxVal = output(0);
