@@ -12,7 +12,7 @@
 #include "MNISTdata/FileReader.hpp"
 
 int main() {
-    /*FileReader reader("C:\\Users\\tinsa\\Projects\\NNs\\train-images-idx3-ubyte\\train-images.idx3-ubyte", "C:\\Users\\tinsa\\Projects\\NNs\\train-labels-idx1-ubyte\\train-labels.idx1-ubyte");
+    FileReader reader("C:\\Users\\tinsa\\Projects\\NNs\\train-images-idx3-ubyte\\train-images.idx3-ubyte", "C:\\Users\\tinsa\\Projects\\NNs\\train-labels-idx1-ubyte\\train-labels.idx1-ubyte");
     reader.read_mnist();
 
     auto& imgs = reader.get_images();
@@ -58,11 +58,11 @@ int main() {
 
     net->miniBatchGradientDescent(0.0005,20,32,imgs,lbls);
     net->storeWeightsInFileSystem("weights6.txt");
-    delete net;*/
+    delete net;
 
 
     //testing
-    Network* network = new Network("C:\\Users\\tinsa\\Projects\\NNsV3\\build\\Debug\\weights5.txt");
+    /*Network* network = new Network("C:\\Users\\tinsa\\Projects\\NNsV3\\build\\Debug\\weights5.txt");
     FileReader reader("C:\\Users\\tinsa\\Projects\\NNs\\t10k-images-idx3-ubyte\\t10k-images.idx3-ubyte", "C:\\Users\\tinsa\\Projects\\NNs\\t10k-labels-idx1-ubyte\\t10k-labels.idx1-ubyte");
     reader.read_mnist();
 
@@ -87,7 +87,7 @@ int main() {
         successes++;
         }
         else{
-            //std::cout << static_cast<int>(lbls[j]) << std::endl;
+            std::cout << static_cast<int>(lbls[j]) << std::endl;
 
         }
         total++;
@@ -98,7 +98,7 @@ int main() {
     
     
     std::cout << "\n";
-    delete network;
+    delete network;*/
 
     return 0;
 }
