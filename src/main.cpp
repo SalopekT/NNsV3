@@ -12,7 +12,7 @@
 #include "MNISTdata/FileReader.hpp"
 
 int main() {
-    FileReader reader("C:\\Users\\tinsa\\Projects\\NNs\\train-images-idx3-ubyte\\train-images.idx3-ubyte", "C:\\Users\\tinsa\\Projects\\NNs\\train-labels-idx1-ubyte\\train-labels.idx1-ubyte");
+    /*FileReader reader("C:\\Users\\tinsa\\Projects\\NNs\\train-images-idx3-ubyte\\train-images.idx3-ubyte", "C:\\Users\\tinsa\\Projects\\NNs\\train-labels-idx1-ubyte\\train-labels.idx1-ubyte");
     reader.read_mnist();
 
     auto& imgs = reader.get_images();
@@ -34,11 +34,11 @@ int main() {
 
 
 
-    std::unique_ptr<Layer> l1 = std::make_unique<LinearLayer>(784,128);
+    std::unique_ptr<Layer> l1 = std::make_unique<LinearLayer>(784,256);
     //l1->printWeights();
-    std::unique_ptr<Activation> a1 = std::make_unique<Relu>(128);
+    std::unique_ptr<Activation> a1 = std::make_unique<Relu>(256);
 
-     std::unique_ptr<Layer> l2 = std::make_unique<LinearLayer>(128,128);
+     std::unique_ptr<Layer> l2 = std::make_unique<LinearLayer>(256,128);
     //l2->printWeights();
     std::unique_ptr<Activation> a2 = std::make_unique<Relu>(128);
 
@@ -56,13 +56,13 @@ int main() {
     std::cout << imgs[0].size() << std::endl;
     std::cout << static_cast<int>(lbls[2]) << '\n';
 
-    net->miniBatchGradientDescent(0.0005,20,32,imgs,lbls);
-    net->storeWeightsInFileSystem("weights6.txt");
-    delete net;
+    net->miniBatchGradientDescent(0.005,25,32,imgs,lbls);
+    net->storeWeightsInFileSystem("weights7.txt");
+    delete net;*/
 
 
     //testing
-    /*Network* network = new Network("C:\\Users\\tinsa\\Projects\\NNsV3\\build\\Debug\\weights5.txt");
+    Network* network = new Network("C:\\Users\\tinsa\\Projects\\NNsV3\\build\\Debug\\weights7.txt");
     FileReader reader("C:\\Users\\tinsa\\Projects\\NNs\\t10k-images-idx3-ubyte\\t10k-images.idx3-ubyte", "C:\\Users\\tinsa\\Projects\\NNs\\t10k-labels-idx1-ubyte\\t10k-labels.idx1-ubyte");
     reader.read_mnist();
 
@@ -98,7 +98,7 @@ int main() {
     
     
     std::cout << "\n";
-    delete network;*/
+    delete network;
 
     return 0;
 }

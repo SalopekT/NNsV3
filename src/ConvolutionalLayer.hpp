@@ -6,9 +6,9 @@ class ConvolutionalLayer : Layer{ //it inherits Layer so here: weights matrix is
         Eigen::MatrixXd convMatrix;
 
     public:
-        ConvolutionalLayer(int dimensionInput, int dimensionOutput);
-        ConvolutionalLayer(int dimensionInput, int dimensionOutput, const Eigen::MatrixXd& weights)
-        : Layer(dimensionInput,dimensionOutput,weights){}
+        ConvolutionalLayer(int dimensionInput, int dimensionKernel);
+        ConvolutionalLayer(int dimensionInput, const Eigen::MatrixXd& weights)
+        : Layer(dimensionInput,dimensionInput,weights){}
 
         Eigen::VectorXd simpleCalculateOutput(const Eigen::VectorXd& input) override;
         Eigen::MatrixXd calculateAdjointWeights(const Eigen::VectorXd& adjointPrev) override;

@@ -215,6 +215,7 @@ void Network::miniBatchGradientDescent(double learningRate, int numEpochs, int b
     int counter = 1;
     double avg_loss = 0;
     for (int i=0;i<numEpochs;i++){
+        int correct = 0;
         for (int j=0;j<2000;j++){
             std::vector<std::vector<uint8_t>> batch;
             for (int k=0;k<batchSize;k++){
@@ -238,6 +239,9 @@ void Network::miniBatchGradientDescent(double learningRate, int numEpochs, int b
                     }
                 }
                 Eigen::VectorXd prediction = this->forwardPass(input);
+                Eigen::Index predictedLabel;
+                prediction.maxCoeff(&predictedLabel);
+                if (predictedLabel == label) correct++;
                 double sampleLoss = this->backwardPass(prediction,realOutput);
                 avg_loss+=sampleLoss;
                 this->storeWeightsCumulative();
@@ -247,12 +251,13 @@ void Network::miniBatchGradientDescent(double learningRate, int numEpochs, int b
             counter++;
             if (counter==200){
                 std::cout << "Average loss: " << avg_loss/(200*batchSize) << std::endl;
-                if (avg_loss/(200*batchSize) < 0.1) return;
+                if (avg_loss/(200*batchSize) < 0.02) return;
                 counter = 1;
                 avg_loss=0;
             }
             
         }
+        std::cout << "End epoch, accuracy is: " << (double) correct/(2000*batchSize) << std::endl;
     }
 
 
