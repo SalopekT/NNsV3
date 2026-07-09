@@ -21,12 +21,22 @@ ConvolutionalLayer::ConvolutionalLayer(int dimensionInput, int dimensionKernel) 
     int helper = dimensionKernel%2;
     int width = std::sqrt(dimensionInput);
     int height = std::sqrt(dimensionInput);
+    int widthWithPadding = width+helper*2;
+    int heightWithPadding = height+helper*2;
     assert(width * width == dimensionInput);
     this->convMatrix = Eigen::MatrixXd::Zero(dimensionInput, (dimensionInput+helper)*(dimensionInput+helper));
+    //convMatrix is operation on flattened padded input image so it has different dimensions than input image
 
     for (int i=helper;i<helper+height;i++){
         for (int j=helper;j<helper+width;j++){
-            
+            int positionInInput = i*widthWithPadding+j; //this is the position of the middle slot in the conv kernel so w22 if 3x3 filter
+                                                        //w33 if 5x5 ...
+            convMatrix(i,j) = weights(helper,helper);
+            for (int k=-helper;k<=helper;k++){
+                for (int s=-helper;s<=helper;s++){
+                    
+                }
+            }
         }
     }
 
