@@ -16,6 +16,7 @@ add_executable(eigen_example
     src/Activations/Softmax.cpp
     src/Losses/CrossEntropyLoss.cpp
     src/MNISTdata/FileReader.cpp
+    src/ConvolutionalLayer.cpp
 )
 
 target_link_libraries(eigen_example

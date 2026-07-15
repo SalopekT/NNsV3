@@ -10,8 +10,12 @@
 #include "Network.hpp"
 #include "Losses/CrossEntropyLoss.hpp"
 #include "MNISTdata/FileReader.hpp"
+#include "ConvolutionalLayer.hpp"
 
 int main() {
+    std::unique_ptr<ConvolutionalLayer> convLayer1 = std::make_unique<ConvolutionalLayer>(9,3);
+    convLayer1->printWeights();
+    convLayer1->printConvMatrix();
     /*FileReader reader("C:\\Users\\tinsa\\Projects\\NNs\\train-images-idx3-ubyte\\train-images.idx3-ubyte", "C:\\Users\\tinsa\\Projects\\NNs\\train-labels-idx1-ubyte\\train-labels.idx1-ubyte");
     reader.read_mnist();
 
@@ -62,7 +66,7 @@ int main() {
 
 
     //testing
-    Network* network = new Network("C:\\Users\\tinsa\\Projects\\NNsV3\\build\\Debug\\weights7.txt");
+    /*Network* network = new Network("C:\\Users\\tinsa\\Projects\\NNsV3\\build\\Debug\\weights7.txt");
     FileReader reader("C:\\Users\\tinsa\\Projects\\NNs\\t10k-images-idx3-ubyte\\t10k-images.idx3-ubyte", "C:\\Users\\tinsa\\Projects\\NNs\\t10k-labels-idx1-ubyte\\t10k-labels.idx1-ubyte");
     reader.read_mnist();
 
@@ -98,7 +102,7 @@ int main() {
     
     
     std::cout << "\n";
-    delete network;
+    delete network;*/
 
     return 0;
 }
