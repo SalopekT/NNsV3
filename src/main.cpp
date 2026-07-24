@@ -11,11 +11,25 @@
 #include "Losses/CrossEntropyLoss.hpp"
 #include "MNISTdata/FileReader.hpp"
 #include "ConvolutionalLayer.hpp"
+#include <vector>
 
 int main() {
     std::unique_ptr<ConvolutionalLayer> convLayer1 = std::make_unique<ConvolutionalLayer>(9,3);
     convLayer1->printWeights();
     convLayer1->printConvMatrix();
+    std::cout << "----------\n";
+    Eigen::VectorXd input = Eigen::VectorXd::Random(9);
+    std::cout << input << std::endl;
+    std::cout << "----------\n";
+    Eigen::VectorXd output = convLayer1->simpleCalculateOutput(input);
+    std::cout << output << std::endl;
+    std::cout << "----------\n";
+    for (const auto& row : convLayer1->getRowIndices()) {
+        for (const auto& val : row) {
+            std::cout << val << " ";
+        }
+        std::cout << "\n";
+    }
     /*FileReader reader("C:\\Users\\tinsa\\Projects\\NNs\\train-images-idx3-ubyte\\train-images.idx3-ubyte", "C:\\Users\\tinsa\\Projects\\NNs\\train-labels-idx1-ubyte\\train-labels.idx1-ubyte");
     reader.read_mnist();
 

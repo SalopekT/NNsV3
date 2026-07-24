@@ -18,6 +18,7 @@ ConvolutionalLayer::ConvolutionalLayer(int dimensionInput, int dimensionKernel) 
     adjointWeights = Eigen::MatrixXd::Zero(dimensionKernel, dimensionKernel);
     adjointInput = Eigen::VectorXd::Zero(dimensionInput);
     cumulativeAdjointWeights = Eigen::MatrixXd::Zero(dimensionKernel, dimensionKernel);
+    
 
     int helper = dimensionKernel%2;
     int width = std::sqrt(dimensionInput);
@@ -34,15 +35,31 @@ ConvolutionalLayer::ConvolutionalLayer(int dimensionInput, int dimensionKernel) 
             int positionInInput = i*widthWithPadding+j; //this is the position of the middle slot in the conv kernel so w22 if 3x3 filter
                                                         //w33 if 5x5 ...
             this->convMatrix(counter,positionInInput) = weights(helper,helper);
-
+            //
+            Eigen::MatrixXi indicesWeightsOneMap = Eigen::MatrixXi::Zero(dimensionKernel, dimensionKernel);
+            indicesWeightsOneMap(helper,helper) = positionInInput;
+            //
             for (int k=1;k<=helper;k++){
                 this->convMatrix(counter, positionInInput-k*widthWithPadding) = weights(helper-k,helper);
                 this->convMatrix(counter, positionInInput+k*widthWithPadding) = weights(helper+k,helper);
+                //
+                indicesWeightsOneMap(helper-k,helper) = positionInInput-k*widthWithPadding;
+                indicesWeightsOneMap(helper+k,helper) = positionInInput+k*widthWithPadding;
+
+                //
                 for (int s=1;s<=helper;s++){
                     this->convMatrix(counter, positionInInput-k*widthWithPadding-s) = weights(helper-k,helper-s);
                     this->convMatrix(counter, positionInInput-k*widthWithPadding+s) = weights(helper-k,helper+s);
                     this->convMatrix(counter, positionInInput+k*widthWithPadding-s) = weights(helper+k,helper-s);
                     this->convMatrix(counter, positionInInput+k*widthWithPadding+s) = weights(helper+k,helper+s);
+
+                    //
+                    indicesWeightsOneMap(helper-k,helper-s) = positionInInput-k*widthWithPadding-s;
+                    indicesWeightsOneMap(helper-k,helper+s) = positionInInput-k*widthWithPadding+s;
+                    indicesWeightsOneMap(helper+k,helper-s) = positionInInput+k*widthWithPadding-s;
+                    indicesWeightsOneMap(helper+k,helper+s) = positionInInput+k*widthWithPadding+s;
+
+                    //
                 }
             }
         
@@ -57,8 +74,13 @@ ConvolutionalLayer::ConvolutionalLayer(int dimensionInput, int dimensionKernel) 
               << std::endl;*/
                 this->convMatrix(counter,positionInInput+k) = weights(helper,helper+k);
                 this->convMatrix(counter,positionInInput-k) = weights(helper,helper-k);
+
+                //
+                indicesWeightsOneMap(helper,helper-k) = positionInInput-k;
+                indicesWeightsOneMap(helper,helper+k) = positionInInput+k;
                 //std::cout << k << std::endl;
             }
+            this->indicesWeights.push_back(indicesWeightsOneMap);
             counter++;
         }
         
@@ -82,10 +104,27 @@ Eigen::VectorXd ConvolutionalLayer::simpleCalculateOutput(const Eigen::VectorXd&
             }
         }
     }
+    
+    Eigen::VectorXd paddedInput = Eigen::VectorXd::Zero(dimensionPaddedInputMatrix*dimensionPaddedInputMatrix);
+    for (int i=0;i<dimensionPaddedInputMatrix;i++){
+        for (int j=0;j<dimensionPaddedInputMatrix;j++){
+            paddedInput(i*dimensionPaddedInputMatrix+j)=paddedInputMatrix(i,j);
+        }
+    }
+    Eigen::VectorXd outputVec = this->convMatrix * paddedInput;
+    return outputVec;
 }
 
 Eigen::MatrixXd ConvolutionalLayer::calculateAdjointWeights(const Eigen::VectorXd& adjointPrev){
-    return Eigen::VectorXd::Zero(1);
+    for (int i=0;i<this->dimensionInput;i++){
+        Eigen::MatrixXi currIndices = this->indicesWeights.at(i);
+        for (int j=0;j<dimensionKernel;j++){
+            for (int k=0;k<dimensionKernel;k++){
+                this->adjointWeights(j,k)+=this->input(currIndices(j,k))*adjointPrev(i);
+            }
+            
+        }
+    }
 }
 
 Eigen::VectorXd ConvolutionalLayer::calculateAdjointInput(const Eigen::VectorXd& adjointPrev){
@@ -94,4 +133,10 @@ Eigen::VectorXd ConvolutionalLayer::calculateAdjointInput(const Eigen::VectorXd&
 
 void ConvolutionalLayer::printConvMatrix(){
     std::cout << this->convMatrix << std::endl;
+}
+
+
+
+std::vector<Eigen::MatrixXi> ConvolutionalLayer::getRowIndices(){
+    return this->indicesWeights;
 }
