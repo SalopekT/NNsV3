@@ -2,15 +2,15 @@
 #include <Eigen/Dense>
 #include <memory>
 #include <random>
-#include "Layer.hpp"
-#include "LinearLayer.hpp"
+#include "Layers/Layer.hpp"
+#include "Layers/LinearLayer.hpp"
 #include "Activations/Activation.hpp"
 #include "Activations/Relu.hpp"
 #include "Activations/Softmax.hpp"
 #include "Network.hpp"
 #include "Losses/CrossEntropyLoss.hpp"
 #include "MNISTdata/FileReader.hpp"
-#include "ConvolutionalLayer.hpp"
+#include "Layers/ConvolutionalLayer.hpp"
 #include <vector>
 
 int main() {
@@ -24,12 +24,7 @@ int main() {
     Eigen::VectorXd output = convLayer1->simpleCalculateOutput(input);
     std::cout << output << std::endl;
     std::cout << "----------\n";
-    for (const auto& row : convLayer1->getRowIndices()) {
-        for (const auto& val : row) {
-            std::cout << val << " ";
-        }
-        std::cout << "\n";
-    }
+    
     /*FileReader reader("C:\\Users\\tinsa\\Projects\\NNs\\train-images-idx3-ubyte\\train-images.idx3-ubyte", "C:\\Users\\tinsa\\Projects\\NNs\\train-labels-idx1-ubyte\\train-labels.idx1-ubyte");
     reader.read_mnist();
 

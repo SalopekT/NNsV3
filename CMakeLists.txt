@@ -9,14 +9,14 @@ find_package(Eigen3 3.3 REQUIRED NO_MODULE)
 
 add_executable(eigen_example
     src/main.cpp
-    src/Layer.cpp
-    src/LinearLayer.cpp
+    src/Layers/Layer.cpp
+    src/Layers/LinearLayer.cpp
     src/Network.cpp
     src/Activations/Relu.cpp
     src/Activations/Softmax.cpp
     src/Losses/CrossEntropyLoss.cpp
     src/MNISTdata/FileReader.cpp
-    src/ConvolutionalLayer.cpp
+    src/Layers/ConvolutionalLayer.cpp
 )
 
 target_link_libraries(eigen_example

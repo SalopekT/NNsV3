@@ -125,11 +125,24 @@ Eigen::MatrixXd ConvolutionalLayer::calculateAdjointWeights(const Eigen::VectorX
             
         }
     }
+    return this->adjointWeights;
 }
 
 Eigen::VectorXd ConvolutionalLayer::calculateAdjointInput(const Eigen::VectorXd& adjointPrev){
-    return Eigen::VectorXd::Zero(1);
+    for (int i=0;i<dimensionInput;i++){
+        Eigen::MatrixXi currIndices = this->indicesWeights.at(i);
+        
+        for (int k=0;k<dimensionKernel;k++){
+            for (int s=0;s<dimensionKernel;s++){
+              int indexInInput = currIndices(k,s);
+              this->adjointInput(indexInInput)+=this->weights(k,s)*adjointPrev(i);
+            }
+        }
+          
+    }
+    return this->adjointInput;
 }
+
 
 void ConvolutionalLayer::printConvMatrix(){
     std::cout << this->convMatrix << std::endl;

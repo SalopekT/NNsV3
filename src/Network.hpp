@@ -5,7 +5,7 @@
 #include <vector>
 #include <memory>
 #include <Eigen/Dense>
-#include "Layer.hpp"
+#include "Layers/Layer.hpp"
 #include "Activations/Activation.hpp"
 #include "Losses/Loss.hpp"
 

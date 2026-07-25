@@ -1,8 +1,8 @@
 #include "Network.hpp"
-#include "Layer.hpp"
+#include "Layers/Layer.hpp"
 #include "Activations/Activation.hpp"
 #include "Losses/Loss.hpp"
-#include "LinearLayer.hpp"
+#include "Layers/LinearLayer.hpp"
 #include "Activations/Relu.hpp"
 #include "Activations/Softmax.hpp"
 #include <fstream>
