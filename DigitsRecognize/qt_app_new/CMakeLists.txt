@@ -27,8 +27,8 @@ set(GUI_SOURCES
 # --- ML sources ---
 set(ML_SOURCES
     ${ML_SRC_DIR}/Network.cpp
-    ${ML_SRC_DIR}/Layer.cpp
-    ${ML_SRC_DIR}/LinearLayer.cpp
+    ${ML_SRC_DIR}/Layers/Layer.cpp
+    ${ML_SRC_DIR}/Layers/LinearLayer.cpp
     ${ML_SRC_DIR}/Activations/Relu.cpp
     ${ML_SRC_DIR}/Activations/Softmax.cpp
     ${ML_SRC_DIR}/MNISTdata/FileReader.cpp

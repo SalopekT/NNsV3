@@ -10,7 +10,20 @@ MCConvolutionalLayer::MCConvolutionalLayer(int inputChannels, int outputChannels
 }
 
 Eigen::VectorXd MCConvolutionalLayer::simpleCalculateOutput(const Eigen::VectorXd& input){
-
+    Eigen::VectorXd allChannels = Eigen::VectorXd::Zero(dimensionOutput*outputChannels);
+    for (int i=0;i<outputChannels;i++){
+        Eigen::VectorXd oneFilterOutput = Eigen::VectorXd::Zero(dimensionOutput);
+        for (int j=0;j<inputChannels;j++){
+            int firstElement = j*this->dimensionInput;
+            Eigen::VectorXd currentChannel = input.segment(firstElement, dimensionInput);
+            Eigen::VectorXd oneChannelOutput = this->filters.at(i)->simpleCalculateOutput(currentChannel);
+            oneFilterOutput+=oneChannelOutput;
+        }
+        int firstElement = i*this->dimensionOutput;
+        allChannels.segment(firstElement, dimensionOutput) = oneFilterOutput;
+        
+    }
+   
 }
  Eigen::MatrixXd calculateAdjointWeights(const Eigen::VectorXd& adjointPrev){
 
