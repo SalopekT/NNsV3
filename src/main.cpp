@@ -11,21 +11,25 @@
 #include "Losses/CrossEntropyLoss.hpp"
 #include "MNISTdata/FileReader.hpp"
 #include "Layers/ConvolutionalLayer.hpp"
+#include "Layers/MCConvolutionalLayer.hpp"
 #include <vector>
 
 int main() {
-    std::unique_ptr<ConvolutionalLayer> convLayer1 = std::make_unique<ConvolutionalLayer>(9,3);
+    /*std::unique_ptr<ConvolutionalLayer> convLayer1 = std::make_unique<ConvolutionalLayer>(9,3);
     convLayer1->printWeights();
     convLayer1->printConvMatrix();
     std::cout << "----------\n";
     Eigen::VectorXd input = Eigen::VectorXd::Random(9);
     std::cout << input << std::endl;
-    std::cout << "----------\n";
-    Eigen::VectorXd output = convLayer1->simpleCalculateOutput(input);
-    std::cout << output << std::endl;
-    std::cout << "----------\n";
-    
-    /*FileReader reader("C:\\Users\\tinsa\\Projects\\NNs\\train-images-idx3-ubyte\\train-images.idx3-ubyte", "C:\\Users\\tinsa\\Projects\\NNs\\train-labels-idx1-ubyte\\train-labels.idx1-ubyte");
+    std::cout << "----------\n";*/
+    /*Eigen::VectorXd output = convLayer1->simpleCalculateOutput(input);
+    std::cout << output << std::endl;*/
+    //std::cout << "----------\n";
+
+    //std::unique_ptr<Layer> mcConvLayer1 = std::make_unique<MCConvolutionalLayer>(1,32,9,3);
+    //Eigen::VectorXd outputFirst = mcConvLayer1->simpleCalculateOutput(input);
+
+    FileReader reader("C:\\Users\\tinsa\\Projects\\NNs\\train-images-idx3-ubyte\\train-images.idx3-ubyte", "C:\\Users\\tinsa\\Projects\\NNs\\train-labels-idx1-ubyte\\train-labels.idx1-ubyte");
     reader.read_mnist();
 
     auto& imgs = reader.get_images();
@@ -45,33 +49,35 @@ int main() {
         lbls.begin() + N
     );
 
+    std::unique_ptr<Layer> mcConvLayer1 = std::make_unique<MCConvolutionalLayer>(1,32,784,3);
+    std::unique_ptr<Activation> mca1 = std::make_unique<Relu>(32*784);
 
-
-    std::unique_ptr<Layer> l1 = std::make_unique<LinearLayer>(784,256);
+    std::unique_ptr<Layer> l1 = std::make_unique<LinearLayer>(32*784,10);
     //l1->printWeights();
-    std::unique_ptr<Activation> a1 = std::make_unique<Relu>(256);
+    std::unique_ptr<Activation> a1 = std::make_unique<Softmax>(256);
 
-     std::unique_ptr<Layer> l2 = std::make_unique<LinearLayer>(256,128);
+    /*std::unique_ptr<Layer> l2 = std::make_unique<LinearLayer>(256,128);
     //l2->printWeights();
     std::unique_ptr<Activation> a2 = std::make_unique<Relu>(128);
 
     std::unique_ptr<Layer> l3= std::make_unique<LinearLayer>(128,10);
     //l2->printWeights();
-    std::unique_ptr<Activation> a3 = std::make_unique<Softmax>(10);
+    std::unique_ptr<Activation> a3 = std::make_unique<Softmax>(10);*/
 
     std::unique_ptr<Loss> loss = std::make_unique<CrossEntropyLoss>(10);
 
     Network* net = new Network();
+    net->addLayerAndActivation(std::move(mcConvLayer1),std::move(mca1));
     net->addLayerAndActivation(std::move(l1),std::move(a1));
-    net->addLayerAndActivation(std::move(l2),std::move(a2));
-    net->addLayerAndActivation(std::move(l3),std::move(a3));
+    /*net->addLayerAndActivation(std::move(l2),std::move(a2));
+    net->addLayerAndActivation(std::move(l3),std::move(a3));*/
     net->setLoss(std::move(loss));
     std::cout << imgs[0].size() << std::endl;
     std::cout << static_cast<int>(lbls[2]) << '\n';
 
     net->miniBatchGradientDescent(0.005,25,32,imgs,lbls);
-    net->storeWeightsInFileSystem("weights7.txt");
-    delete net;*/
+    net->storeWeightsInFileSystem("weights8.txt");
+    delete net;
 
 
     //testing

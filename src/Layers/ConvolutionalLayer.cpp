@@ -111,6 +111,7 @@ Eigen::VectorXd ConvolutionalLayer::simpleCalculateOutput(const Eigen::VectorXd&
             paddedInput(i*dimensionPaddedInputMatrix+j)=paddedInputMatrix(i,j);
         }
     }
+    this->input = paddedInput;
     Eigen::VectorXd outputVec = this->convMatrix * paddedInput;
     return outputVec;
 }

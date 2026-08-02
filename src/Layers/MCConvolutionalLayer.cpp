@@ -21,14 +21,25 @@ Eigen::VectorXd MCConvolutionalLayer::simpleCalculateOutput(const Eigen::VectorX
         }
         int firstElement = i*this->dimensionOutput;
         allChannels.segment(firstElement, dimensionOutput) = oneFilterOutput;
-        
     }
-   
+    return allChannels;
 }
- Eigen::MatrixXd calculateAdjointWeights(const Eigen::VectorXd& adjointPrev){
-
+ Eigen::MatrixXd MCConvolutionalLayer::calculateAdjointWeights(const Eigen::VectorXd& adjointPrev){
+    for (int i=0;i<outputChannels;i++){
+        int firstElement = i*this->dimensionOutput;
+        Eigen::VectorXd currentChannelAdjoint = input.segment(firstElement, dimensionOutput);
+        this->filters.at(i)->calculateAdjointWeights(currentChannelAdjoint);
+    }
+    return this->filters.at(0)->getAdjointWeights(); //this return doesn't really matter
  }
         
- Eigen::VectorXd calculateAdjointInput(const Eigen::VectorXd& adjointPrev){
-
+Eigen::VectorXd MCConvolutionalLayer::calculateAdjointInput(const Eigen::VectorXd& adjointPrev){
+    Eigen::VectorXd allChannels = Eigen::VectorXd::Zero(dimensionInput*inputChannels);
+    for (int i=0;i<outputChannels;i++){
+        int firstElement = i*this->dimensionOutput;
+        Eigen::VectorXd currentChannelAdjoint = adjointPrev.segment(firstElement, dimensionOutput);
+        Eigen::VectorXd adjointInputOneChannel = this->filters.at(i)->calculateAdjointInput(currentChannelAdjoint);
+        allChannels.segment(firstElement,dimensionInput) = adjointInputOneChannel;
+    }
+    return allChannels;
 }

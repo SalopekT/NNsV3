@@ -17,6 +17,7 @@ add_executable(eigen_example
     src/Losses/CrossEntropyLoss.cpp
     src/MNISTdata/FileReader.cpp
     src/Layers/ConvolutionalLayer.cpp
+    src/Layers/MCConvolutionalLayer.cpp
 )
 
 target_link_libraries(eigen_example
