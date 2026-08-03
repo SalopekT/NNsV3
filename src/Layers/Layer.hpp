@@ -22,9 +22,9 @@ class Layer{
 
         Eigen::MatrixXd getAdjointWeights();
         Eigen::VectorXd getAdjointInput();
-        void resetAdjointWeights();
-        void resetAdjointInput();
-        void resetCumulativeAdjointWeights();
+        virtual void resetAdjointWeights();
+        virtual void resetAdjointInput();
+        virtual void resetCumulativeAdjointWeights();
 
         void updateWeights(double learningRate);
         void storeWeightsCumulative();

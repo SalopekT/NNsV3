@@ -95,7 +95,7 @@ double Network::backwardPass(const Eigen::VectorXd& predicted, const Eigen::Vect
     Eigen::VectorXd adjointPrev = this->loss->calculateAdjoint(target);
     for (int i=this->layers.size()-1;i>=0;i--){
         Eigen::VectorXd adjointAct = this->activations.at(i)->calculateAdjoint(adjointPrev);
-        Eigen::MatrixXd adjointLinearWeights = this->layers.at(i)->calculateAdjointWeights(adjointAct);
+        this->layers.at(i)->calculateAdjointWeights(adjointAct);
         Eigen::VectorXd adjointLinearInput = this->layers.at(i)->calculateAdjointInput(adjointAct);
         adjointPrev = adjointLinearInput;
     }
@@ -188,13 +188,17 @@ void Network::stochasticGradientDescent(double learningRate, int numEpochs,
 void Network::storeWeightsCumulative(){
     this->loss->resetAdjoint();
     for (int i=this->layers.size()-1;i>=0;i--){
-        this->layers.at(i)->storeWeightsCumulative();
+        try {
+            this->layers.at(i)->storeWeightsCumulative();
+        } catch (const std::exception& e) {
+            throw;
+        }
+        
         this->layers.at(i)->resetAdjointWeights();
         this->layers.at(i)->resetAdjointInput();
         this->activations.at(i)->resetAdjoint();
     }
 }
-
 void Network::updateWeightsBatch(double learningRate, int batchSize){
     this->loss->resetAdjoint();
     for (int i=this->layers.size()-1;i>=0;i--){
@@ -238,16 +242,21 @@ void Network::miniBatchGradientDescent(double learningRate, int numEpochs, int b
                         realOutput(i)=1;
                     }
                 }
+                //std::cout << "Forward pass start\n";
                 Eigen::VectorXd prediction = this->forwardPass(input);
+                //std::cout << "Forward pass end\n";
                 Eigen::Index predictedLabel;
                 prediction.maxCoeff(&predictedLabel);
                 if (predictedLabel == label) correct++;
+                //std::cout << "Backward pass start\n";
                 double sampleLoss = this->backwardPass(prediction,realOutput);
+                //std::cout << "Backward pass end\n";
                 avg_loss+=sampleLoss;
                 this->storeWeightsCumulative();
             }
 
             this->updateWeightsBatch(learningRate,batchSize);
+            //std::cout << counter << std::endl;
             counter++;
             if (counter==200){
                 std::cout << "Average loss: " << avg_loss/(200*batchSize) << std::endl;

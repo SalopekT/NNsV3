@@ -17,8 +17,11 @@ class MCConvolutionalLayer : public Layer{
         Eigen::VectorXd simpleCalculateOutput(const Eigen::VectorXd& input) override;
         Eigen::MatrixXd calculateAdjointWeights(const Eigen::VectorXd& adjointPrev) override;
         Eigen::VectorXd calculateAdjointInput(const Eigen::VectorXd& adjointPrev) override;
+
+        virtual void resetAdjointInput() override;
+        virtual void resetAdjointWeights() override;
+        virtual void resetCumulativeAdjointWeights() override;
+
+
 };
-
-
-
 #endif

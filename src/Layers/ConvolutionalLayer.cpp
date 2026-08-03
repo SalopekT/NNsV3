@@ -91,24 +91,31 @@ ConvolutionalLayer::ConvolutionalLayer(int dimensionInput, int dimensionKernel) 
 
 Eigen::VectorXd ConvolutionalLayer::simpleCalculateOutput(const Eigen::VectorXd& input){
     //first padding the input
-    int helper = dimensionKernel%2;
-    int paddingSize = 4*(dimensionKernel+helper*helper);
-    int dimensionPaddedInputMatrix = (int) std::sqrt(input.size()+paddingSize);
-    Eigen::MatrixXd paddedInputMatrix = Eigen::MatrixXd::Zero(dimensionPaddedInputMatrix,dimensionPaddedInputMatrix);
+    //int helper = dimensionKernel%2;
+    //int paddingSize = 4*(dimensionKernel+helper*helper);
+    //int dimensionPaddedInputMatrix = (int) std::sqrt(input.size()+paddingSize);
+    int pad = dimensionKernel / 2;
+
+    int width = static_cast<int>(std::sqrt(input.size()));
+    assert(width * width == input.size());
+
+    int paddedWidth = width + 2 * pad;
+
+    Eigen::MatrixXd paddedInputMatrix = Eigen::MatrixXd::Zero(paddedWidth,paddedWidth);
     int counter = 0;
-    for (int i=0;i<dimensionPaddedInputMatrix;i++){
-        for (int j=0;j<dimensionPaddedInputMatrix;j++){
-            if (i!=0 && i!=dimensionPaddedInputMatrix-1 && j!=0 && j!=dimensionPaddedInputMatrix-1){
+    for (int i=0;i<paddedWidth;i++){
+        for (int j=0;j<paddedWidth;j++){
+            if (i!=0 && i!=paddedWidth-1 && j!=0 && j!=paddedWidth-1){
                 paddedInputMatrix(i,j) = input(counter);
                 counter++;
             }
         }
     }
     
-    Eigen::VectorXd paddedInput = Eigen::VectorXd::Zero(dimensionPaddedInputMatrix*dimensionPaddedInputMatrix);
-    for (int i=0;i<dimensionPaddedInputMatrix;i++){
-        for (int j=0;j<dimensionPaddedInputMatrix;j++){
-            paddedInput(i*dimensionPaddedInputMatrix+j)=paddedInputMatrix(i,j);
+    Eigen::VectorXd paddedInput = Eigen::VectorXd::Zero(paddedWidth*paddedWidth);
+    for (int i=0;i<paddedWidth;i++){
+        for (int j=0;j<paddedWidth;j++){
+            paddedInput(i*paddedWidth+j)=paddedInputMatrix(i,j);
         }
     }
     this->input = paddedInput;
@@ -130,18 +137,33 @@ Eigen::MatrixXd ConvolutionalLayer::calculateAdjointWeights(const Eigen::VectorX
 }
 
 Eigen::VectorXd ConvolutionalLayer::calculateAdjointInput(const Eigen::VectorXd& adjointPrev){
-    for (int i=0;i<dimensionInput;i++){
-        Eigen::MatrixXi currIndices = this->indicesWeights.at(i);
-        
-        for (int k=0;k<dimensionKernel;k++){
-            for (int s=0;s<dimensionKernel;s++){
-              int indexInInput = currIndices(k,s);
-              this->adjointInput(indexInInput)+=this->weights(k,s)*adjointPrev(i);
+    int pad = dimensionKernel / 2;
+    int width = std::sqrt(dimensionInput);
+    int paddedWidth = width + 2 * pad;
+    
+    Eigen::VectorXd paddedAdjointInput = Eigen::VectorXd::Zero(paddedWidth * paddedWidth);
+
+    for (int i = 0; i < dimensionInput; i++) {
+        const Eigen::MatrixXi& currIndices = this->indicesWeights.at(i);
+        for (int k = 0; k < dimensionKernel; k++) {
+            for (int s = 0; s < dimensionKernel; s++) {
+                int indexInPaddedInput = currIndices(k, s);
+                paddedAdjointInput(indexInPaddedInput) += this->weights(k, s) * adjointPrev(i);
             }
         }
-          
     }
-    return this->adjointInput;
+    
+    // Create local result instead of using member
+    Eigen::VectorXd result = Eigen::VectorXd::Zero(dimensionInput);
+    int counter = 0;
+    for (int i = pad; i < pad + width; i++) {
+        for (int j = pad; j < pad + width; j++) {
+            result(counter++) = paddedAdjointInput(i * paddedWidth + j);
+        }
+    }
+    
+    this->adjointInput = result; 
+    return result;
 }
 
 

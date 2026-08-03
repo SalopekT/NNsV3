@@ -27,9 +27,9 @@ Eigen::VectorXd LinearLayer::simpleCalculateOutput(const Eigen::VectorXd& input_
     input(input_old.size())=1; 
     this->input = input;
     Eigen::VectorXd outputBefActivation = this->weights * input;
-    Eigen::VectorXd outputAftActivation = outputBefActivation;
+    //Eigen::VectorXd outputAftActivation = outputBefActivation;
 
-    return outputAftActivation;
+    return outputBefActivation;
 }
 
 
@@ -45,6 +45,7 @@ Eigen::MatrixXd LinearLayer::calculateAdjointWeights(const Eigen::VectorXd& adjo
    
    
 Eigen::VectorXd LinearLayer::calculateAdjointInput(const Eigen::VectorXd& adjointPrev){
+    this->adjointInput.setZero();
     for (int i=0;i< this->dimensionInput;i++){
         this->adjointInput(i) += weights.col(i).dot(adjointPrev);
     }
