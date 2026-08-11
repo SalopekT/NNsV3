@@ -13,8 +13,6 @@ Eigen::VectorXd MCConvolutionalLayer::simpleCalculateOutput(const Eigen::VectorX
     Eigen::VectorXd allChannels = Eigen::VectorXd::Zero(dimensionOutput * outputChannels);
     
     for (int i = 0; i < outputChannels; i++) {
-        // Sum all input channels into a single channel first
-        // This ensures filters.at(i) receives and caches ONE valid input vector per forward pass
         Eigen::VectorXd summedInput = Eigen::VectorXd::Zero(dimensionInput);
         for (int j = 0; j < inputChannels; j++) {
             summedInput += input.segment(j * dimensionInput, dimensionInput);
@@ -59,15 +57,12 @@ void MCConvolutionalLayer::resetAdjointInput(){
 }
 
 void MCConvolutionalLayer::resetAdjointWeights(){
-    // MCConvolutionalLayer doesn't store weights - they're in the filters
-    // So we reset the filters' adjoints instead
     for (int i = 0; i < outputChannels; i++) {
         this->filters.at(i)->resetAdjointWeights();
     }
 }
 
 void MCConvolutionalLayer::resetCumulativeAdjointWeights(){
-    // MCConvolutionalLayer doesn't store weights - they're in the filters
     for (int i = 0; i < outputChannels; i++) {
         this->filters.at(i)->resetCumulativeAdjointWeights();
     }

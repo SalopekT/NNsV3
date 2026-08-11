@@ -176,3 +176,11 @@ void ConvolutionalLayer::printConvMatrix(){
 std::vector<Eigen::MatrixXi> ConvolutionalLayer::getRowIndices(){
     return this->indicesWeights;
 }
+
+void ConvolutionalLayer::resetAdjointWeights(){
+    this->adjointWeights = Eigen::MatrixXd::Zero(dimensionKernel,dimensionKernel);
+}
+
+void ConvolutionalLayer::resetCumulativeAdjointWeights(){
+    this->cumulativeAdjointWeights = Eigen::MatrixXd(dimensionKernel,dimensionKernel);
+};

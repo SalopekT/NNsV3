@@ -18,6 +18,9 @@ class ConvolutionalLayer : public Layer{ //it inherits Layer so here: weights ma
         Eigen::MatrixXd calculateAdjointWeights(const Eigen::VectorXd& adjointPrev) override;
         Eigen::VectorXd calculateAdjointInput(const Eigen::VectorXd& adjointPrev) override;
 
+        void resetAdjointWeights() override;
+        void resetCumulativeAdjointWeights() override;
+
         void printConvMatrix();
         std::vector<Eigen::MatrixXi> getRowIndices();
 
