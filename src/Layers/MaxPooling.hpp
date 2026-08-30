@@ -4,8 +4,9 @@
 class MaxPooling : public Layer{
     private:
         int kernelSize;
+        std::vector<Eigen::MatrixXi> indicesWeights;
     public:
-        MaxPooling(int dimensionInput, int dimensionOutput, int kernelSize) : Layer(dimensionInput, dimensionOutput), kernelSize(kernelSize){};
+        MaxPooling(int dimensionInput, int dimensionOutput, int kernelSize);
         Eigen::VectorXd simpleCalculateOutput(const Eigen::VectorXd& input) override;
         Eigen::MatrixXd calculateAdjointWeights(const Eigen::VectorXd& adjointPrev) override;
         Eigen::VectorXd calculateAdjointInput(const Eigen::VectorXd& adjointPrev) override;
