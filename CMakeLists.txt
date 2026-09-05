@@ -18,6 +18,7 @@ add_executable(eigen_example
     src/MNISTdata/FileReader.cpp
     src/Layers/ConvolutionalLayer.cpp
     src/Layers/MCConvolutionalLayer.cpp
+    src/Layers/MaxPooling.cpp
 )
 
 target_link_libraries(eigen_example

@@ -12,6 +12,7 @@
 #include "MNISTdata/FileReader.hpp"
 #include "Layers/ConvolutionalLayer.hpp"
 #include "Layers/MCConvolutionalLayer.hpp"
+#include "Layers/MaxPooling.hpp"
 #include <vector>
 
 int main() {
@@ -49,7 +50,20 @@ int main() {
         lbls.begin() + N
     );
 
-    std::unique_ptr<Layer> mcConvLayer1 = std::make_unique<MCConvolutionalLayer>(1,32,784,3);
+    std::unique_ptr<Layer> maxPool = std::make_unique<MaxPooling>(196,49,2);
+    Eigen::VectorXd input = Eigen::VectorXd::Random(196);
+
+    Eigen::VectorXd output = maxPool->simpleCalculateOutput(input);
+    std::cout << "Input (14x14):\n" 
+            << Eigen::Map<Eigen::MatrixXd>(input.data(), 14, 14) << std::endl;
+
+    std::cout << "\nOutput (7x7):\n" 
+            << Eigen::Map<Eigen::MatrixXd>(output.data(), 7, 7) << std::endl;
+
+    std::cout << "\nAdjoint Input (14x14):\n" 
+          << Eigen::Map<Eigen::MatrixXd>(maxPool->getAdjointInput().data(), 14, 14) << std::endl;
+
+    /*std::unique_ptr<Layer> mcConvLayer1 = std::make_unique<MCConvolutionalLayer>(1,32,784,3);
     std::unique_ptr<Activation> mca1 = std::make_unique<Relu>(32*784);
 
     std::unique_ptr<Layer> l1 = std::make_unique<LinearLayer>(32*784,10);
@@ -76,7 +90,7 @@ int main() {
 
     net->miniBatchGradientDescent(0.005,25,1,imgs,lbls);
     net->storeWeightsInFileSystem("weights8.txt");
-    delete net;
+    delete net;*/
 
 
     //testing

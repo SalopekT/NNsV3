@@ -31,6 +31,7 @@ set(ML_SOURCES
     ${ML_SRC_DIR}/Layers/LinearLayer.cpp
     ${ML_SRC_DIR}/Layers/ConvolutionalLayer.cpp
     ${ML_SRC_DIR}/Layers/MCConvolutionalLayer.cpp
+    ${ML_SRC_DIR}/Layers/MaxPooling.cpp
     ${ML_SRC_DIR}/Activations/Relu.cpp
     ${ML_SRC_DIR}/Activations/Softmax.cpp
     ${ML_SRC_DIR}/MNISTdata/FileReader.cpp
