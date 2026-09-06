@@ -60,6 +60,10 @@ int main() {
     std::cout << "\nOutput (7x7):\n" 
             << Eigen::Map<Eigen::MatrixXd>(output.data(), 7, 7) << std::endl;
 
+    Eigen::VectorXd adjointPrev(49);
+    adjointPrev.setOnes();
+    std::cout << "Here\n";
+    maxPool->calculateAdjointInput(adjointPrev);
     std::cout << "\nAdjoint Input (14x14):\n" 
           << Eigen::Map<Eigen::MatrixXd>(maxPool->getAdjointInput().data(), 14, 14) << std::endl;
 

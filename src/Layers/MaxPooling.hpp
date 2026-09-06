@@ -7,7 +7,6 @@ class MaxPooling : public Layer{
         int kernelSize;
         std::vector<Eigen::MatrixXi> indicesWeights;
         std::vector<bool> isMaxIndex;
-        std::vector<int> mappingFromOutputToInput;
     public:
         MaxPooling(int dimensionInput, int dimensionOutput, int kernelSize);
         Eigen::VectorXd simpleCalculateOutput(const Eigen::VectorXd& input) override;

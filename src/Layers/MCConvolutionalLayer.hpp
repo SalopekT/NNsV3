@@ -10,7 +10,7 @@ class MCConvolutionalLayer : public Layer{
         int inputChannels;
         int outputChannels;
 
-        std::vector<std::shared_ptr<ConvolutionalLayer>> filters; 
+        std::vector<std::shared_ptr<ConvolutionalLayer>> filters; //this is actually 2d array of filters
     public:
         MCConvolutionalLayer(int inputChannels, int outputChannels, int dimensionInput, int dimensionKernel);
 

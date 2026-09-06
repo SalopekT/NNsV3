@@ -28,7 +28,6 @@ MaxPooling::MaxPooling(int dimensionInput, int dimensionOutput, int kernelSize) 
 Eigen::VectorXd MaxPooling::simpleCalculateOutput(const Eigen::VectorXd& input){
     int width = std::sqrt(dimensionInput);
     Eigen::VectorXd result = Eigen::VectorXd::Zero(dimensionOutput);
-    int outputIndex = 0;
     //here i can just go through all the indicesWeights i stored in constructor
     for (int i=0;i<this->indicesWeights.size();i++){
         Eigen::MatrixXd currentInputs = Eigen::MatrixXd::Zero(kernelSize,kernelSize);
@@ -40,7 +39,8 @@ Eigen::VectorXd MaxPooling::simpleCalculateOutput(const Eigen::VectorXd& input){
         Eigen::Index maxI, maxJ;
         double maxValue = currentInputs.maxCoeff(&maxI,&maxJ);
         result(i) = maxValue;
-        isMaxIndex[maxI*width+maxJ] = true; 
+        isMaxIndex[indicesWeights.at(i)(maxI,maxJ)] = true; 
+
     }
 
     return result;
@@ -53,8 +53,27 @@ Eigen::MatrixXd MaxPooling::calculateAdjointWeights(const Eigen::VectorXd& adjoi
 };
         
 Eigen::VectorXd MaxPooling::calculateAdjointInput(const Eigen::VectorXd& adjointPrev){
+    //counting number of true values in isMaxIndex
+    int maxCount = 0;
+    for (int i = 0; i < this->dimensionInput; i++){
+        if (this->isMaxIndex.at(i)) maxCount++;
+    }
+    
+    if (maxCount != adjointPrev.size()) {
+        throw std::runtime_error(
+            "Size mismatch in calculateAdjointInput: " + 
+            std::to_string(maxCount) + " max indices but adjointPrev size is " + 
+            std::to_string(adjointPrev.size())
+        );
+    }
+    
+    this->adjointInput = Eigen::VectorXd::Zero(dimensionInput);
+    int counter = 0;
     for (int i=0;i<this->dimensionInput;i++){
-        if (this->isMaxIndex.at(i)) this->adjointInput(i)=adjointPrev(i);
+        if (this->isMaxIndex.at(i)){
+            this->adjointInput(i)=adjointPrev(counter);
+            counter++;
+        }
         else this->adjointInput(i) = 0;
     }
     return this->adjointInput;
