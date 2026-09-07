@@ -12,6 +12,7 @@ class MCConvolutionalLayer : public Layer{
 
         std::vector<std::shared_ptr<ConvolutionalLayer>> filters; //this is actually 2d array of filters
     public:
+        //dimension output here is still dimension of one channel convolution
         MCConvolutionalLayer(int inputChannels, int outputChannels, int dimensionInput, int dimensionKernel);
 
         Eigen::VectorXd simpleCalculateOutput(const Eigen::VectorXd& input) override;

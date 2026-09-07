@@ -26,6 +26,7 @@ MaxPooling::MaxPooling(int dimensionInput, int dimensionOutput, int kernelSize) 
 
 
 Eigen::VectorXd MaxPooling::simpleCalculateOutput(const Eigen::VectorXd& input){
+    this->input = input;
     int width = std::sqrt(dimensionInput);
     Eigen::VectorXd result = Eigen::VectorXd::Zero(dimensionOutput);
     //here i can just go through all the indicesWeights i stored in constructor
