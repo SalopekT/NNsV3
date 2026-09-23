@@ -7,7 +7,7 @@ class Layer{
     protected:
         Eigen::MatrixXd weights; //biases are embedded in the last column
         Eigen::MatrixXd adjointWeights; //jacobian of output w.r.t weights
-        Eigen::MatrixXd adjointInput; //jacobian of output w.r.t input
+        Eigen::VectorXd adjointInput; //jacobian of output w.r.t input
         int dimensionInput,dimensionOutput;
         Eigen::VectorXd input;
 

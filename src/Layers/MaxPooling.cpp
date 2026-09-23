@@ -19,13 +19,16 @@ MaxPooling::MaxPooling(int dimensionInput, int dimensionOutput, int kernelSize) 
             this->indicesWeights.push_back(currentIndices);
         }
     }
-    std::cout << this->indicesWeights.size() <<std::endl;
+    
     assert(this->indicesWeights.size() == dimensionOutput);
     isMaxIndex.resize(dimensionInput, false);
 };
 
 
 Eigen::VectorXd MaxPooling::simpleCalculateOutput(const Eigen::VectorXd& input){
+    this->isMaxIndex.clear();
+    this->isMaxIndex.resize(dimensionInput, false);
+
     this->input = input;
     int width = std::sqrt(dimensionInput);
     Eigen::VectorXd result = Eigen::VectorXd::Zero(dimensionOutput);
@@ -50,7 +53,7 @@ Eigen::VectorXd MaxPooling::simpleCalculateOutput(const Eigen::VectorXd& input){
         
 Eigen::MatrixXd MaxPooling::calculateAdjointWeights(const Eigen::VectorXd& adjointPrev){
     //there are no weights so nothing to optimize here
-    return Eigen::VectorXd::Zero(dimensionOutput);
+    return Eigen::MatrixXd::Zero(dimensionOutput,dimensionInput);
 };
         
 Eigen::VectorXd MaxPooling::calculateAdjointInput(const Eigen::VectorXd& adjointPrev){
@@ -80,3 +83,12 @@ Eigen::VectorXd MaxPooling::calculateAdjointInput(const Eigen::VectorXd& adjoint
     return this->adjointInput;
 
 };
+
+ void MaxPooling::resetAdjointWeights(){
+    return;
+ };
+
+
+ void MaxPooling::resetCumulativeAdjointWeights(){
+    return;
+ };

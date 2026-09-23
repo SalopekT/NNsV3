@@ -12,6 +12,10 @@ class MaxPooling : public Layer{
         Eigen::VectorXd simpleCalculateOutput(const Eigen::VectorXd& input) override;
         Eigen::MatrixXd calculateAdjointWeights(const Eigen::VectorXd& adjointPrev) override;
         Eigen::VectorXd calculateAdjointInput(const Eigen::VectorXd& adjointPrev) override;
+
+        void resetAdjointWeights() override;
+        void resetCumulativeAdjointWeights() override;
+
 };
 
 #endif

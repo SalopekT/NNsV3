@@ -91,9 +91,10 @@ Eigen::VectorXd Network::forwardPass(const Eigen::VectorXd& input){
 }
 
 double Network::backwardPass(const Eigen::VectorXd& predicted, const Eigen::VectorXd& target){
+    
     double loss = this->loss->calculate(predicted, target);
     Eigen::VectorXd adjointPrev = this->loss->calculateAdjoint(target);
-    for (int i=this->layers.size()-1;i>=0;i--){
+    for (int i=this->layers.size()-1; i>=0; i--){
         Eigen::VectorXd adjointAct = this->activations.at(i)->calculateAdjoint(adjointPrev);
         this->layers.at(i)->calculateAdjointWeights(adjointAct);
         Eigen::VectorXd adjointLinearInput = this->layers.at(i)->calculateAdjointInput(adjointAct);
@@ -252,10 +253,13 @@ void Network::miniBatchGradientDescent(double learningRate, int numEpochs, int b
                 double sampleLoss = this->backwardPass(prediction,realOutput);
                 //std::cout << "Backward pass end\n";
                 avg_loss+=sampleLoss;
+                //std::cout << "storing weights start\n";
                 this->storeWeightsCumulative();
+                //std::cout << "storing weights end\n";
             }
-
+            //std::cout << "updating weights start\n";
             this->updateWeightsBatch(learningRate,batchSize);
+            //std::cout << "updating weights end\n";
             //std::cout << counter << std::endl;
             counter++;
             if (counter==200){

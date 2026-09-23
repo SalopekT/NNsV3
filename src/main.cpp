@@ -1,4 +1,5 @@
 #include <iostream>
+#define EIGEN_USE_CUDA
 #include <Eigen/Dense>
 #include <memory>
 #include <random>
@@ -7,12 +8,14 @@
 #include "Activations/Activation.hpp"
 #include "Activations/Relu.hpp"
 #include "Activations/Softmax.hpp"
+#include "Activations/IdentityActivation.hpp"
 #include "Network.hpp"
 #include "Losses/CrossEntropyLoss.hpp"
 #include "MNISTdata/FileReader.hpp"
 #include "Layers/ConvolutionalLayer.hpp"
 #include "Layers/MCConvolutionalLayer.hpp"
 #include "Layers/MaxPooling.hpp"
+#include "Layers/MCMaxPooling.hpp"
 #include <vector>
 
 int main() {
@@ -50,7 +53,7 @@ int main() {
         lbls.begin() + N
     );
 
-    std::unique_ptr<Layer> maxPool = std::make_unique<MaxPooling>(196,49,2);
+    /*std::unique_ptr<Layer> maxPool = std::make_unique<MaxPooling>(196,49,2);
     Eigen::VectorXd input = Eigen::VectorXd::Random(196);
 
     Eigen::VectorXd output = maxPool->simpleCalculateOutput(input);
@@ -65,14 +68,26 @@ int main() {
     std::cout << "Here\n";
     maxPool->calculateAdjointInput(adjointPrev);
     std::cout << "\nAdjoint Input (14x14):\n" 
-          << Eigen::Map<Eigen::MatrixXd>(maxPool->getAdjointInput().data(), 14, 14) << std::endl;
+          << Eigen::Map<Eigen::MatrixXd>(maxPool->getAdjointInput().data(), 14, 14) << std::endl;*/
 
-    /*std::unique_ptr<Layer> mcConvLayer1 = std::make_unique<MCConvolutionalLayer>(1,32,784,3);
+    std::unique_ptr<Layer> mcConvLayer1 = std::make_unique<MCConvolutionalLayer>(1,32,784,3);
     std::unique_ptr<Activation> mca1 = std::make_unique<Relu>(32*784);
 
-    std::unique_ptr<Layer> l1 = std::make_unique<LinearLayer>(32*784,10);
+    std::unique_ptr<Layer> pool1 = std::make_unique<MCMaxPooling>(32,32,784,196,2);
+    std::unique_ptr<Activation> id1 = std::make_unique<IdentityActivation>(196*32);
+
+    std::unique_ptr<Layer> mcConvLayer2 = std::make_unique<MCConvolutionalLayer>(32,32,196,3);
+    std::unique_ptr<Activation> mca2 = std::make_unique<Relu>(32*196);
+
+    std::unique_ptr<Layer> pool2 = std::make_unique<MCMaxPooling>(32,32,196,49,2);
+    std::unique_ptr<Activation> id2 = std::make_unique<IdentityActivation>(49*32);
+
+    std::unique_ptr<Layer> l1 = std::make_unique<LinearLayer>(32*49,10);
     //l1->printWeights();
     std::unique_ptr<Activation> a1 = std::make_unique<Softmax>(10);
+
+
+
 
     std::unique_ptr<Layer> l2 = std::make_unique<LinearLayer>(256,128);
     //l2->printWeights();
@@ -85,6 +100,9 @@ int main() {
 
     Network* net = new Network();
     net->addLayerAndActivation(std::move(mcConvLayer1),std::move(mca1));
+    net->addLayerAndActivation(std::move(pool1),std::move(id1));
+    net->addLayerAndActivation(std::move(mcConvLayer2),std::move(mca2));
+    net->addLayerAndActivation(std::move(pool2),std::move(id2));
     net->addLayerAndActivation(std::move(l1),std::move(a1));
     //net->addLayerAndActivation(std::move(l2),std::move(a2));
     //net->addLayerAndActivation(std::move(l3),std::move(a3));
@@ -94,7 +112,7 @@ int main() {
 
     net->miniBatchGradientDescent(0.005,25,1,imgs,lbls);
     net->storeWeightsInFileSystem("weights8.txt");
-    delete net;*/
+    delete net;
 
 
     //testing
